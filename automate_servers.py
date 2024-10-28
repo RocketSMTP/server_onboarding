@@ -46,6 +46,11 @@ def execute_commands(server_ip, username, password, domain_name):
             "sudo yum install gdb perl-Cwd perl-File-Temp perl-Getopt-Long perl-POSIX perl-Storable perl-Time-Local perl-strict perl-vars perl-warnings -y",
             "sudo wget -O install.sh https://raw.githubusercontent.com/chimajdev/rocket/main/install.sh",
             "yes | sudo bash install.sh",
+            "sudo yum remove postfix3 -y",
+            "sudo yum install postfix -y",
+            "sudo systemctl enable postfix",
+            "sudo systemctl start postfix",
+            "sudo systemctl status postfix",
             "sudo service pmta restart"
         ]
         
