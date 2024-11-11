@@ -15,6 +15,13 @@ def execute_commands(server_ip, username, password, domain_name):
         # Construct the bash script with DOMAIN_NAME
         bash_script_lines = [
             "#!/bin/bash",
+            # Check if the URL is present before running sed command
+            "if grep -q 'http://mirrors.linode.com' /etc/yum.repos.d/*.repo; then",
+            "    sed -i 's|http://mirrors.linode.com|https://vault.centos.org|g' /etc/yum.repos.d/*.repo",
+            "    echo 'URL found and replaced.'",
+            "else",
+            "    echo 'URL not found. No changes made.'",
+            "fi",
             "sudo yum install expect -y",
             "cat << 'EOF' > change_root_password.exp",
             "#!/usr/bin/expect",
@@ -29,7 +36,7 @@ def execute_commands(server_ip, username, password, domain_name):
             "chmod +x change_root_password.exp",
             "./change_root_password.exp",
             "sudo service sshd reload",
-            "hostname {}".format(domain_name),
+            f"hostname {domain_name}",
             "sudo yum update -y",
             "sudo yum install wget -y",
             "sudo wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh",
